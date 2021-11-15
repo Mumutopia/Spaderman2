@@ -1,0 +1,19 @@
+.index-wrapper {
+    background-image: url("../img/desert-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+   
+  
+  }
+  
+  .main-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+  
+  .image-title {
+    max-width: 20%;
+  }

@@ -3,7 +3,10 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "node ./bin/www",
+    "dev":  "nodemon ./bin/www ",
+    "seed:users": "node ./seeds/Users.js",
+    "seed:games": "node ./seeds/Games.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

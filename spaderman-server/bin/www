@@ -5,14 +5,18 @@
  */
 
 var app = require('../app');
+
 var debug = require('debug')('spaderman-server:server');
 var http = require('http');
+
+const cors = require("cors");
+const initSocket =require('../socket/index2')
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = normalizePort(process.env.PORT || '3000');
+var port = normalizePort(process.env.PORT || '5000');
 app.set('port', port);
 
 /**
@@ -20,7 +24,18 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+// const socketWrap = require("./../socket")(server)
+/**
+ * Configuring Cors 
+ */
+ app.use(
+  cors({
+    origin: ["http://localhost:3000"],
+    credentials: true,
+  })
+);
 
+initSocket(server);
 /**
  * Listen on provided port, on all network interfaces.
  */
@@ -28,6 +43,8 @@ var server = http.createServer(app);
 server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
+
+console.log('listening on', port)
 
 /**
  * Normalize a port into a number, string, or false.
