@@ -20,5 +20,5 @@ const GameSchema = new Schema({
 });
 
 
-const GameModel = model("skills", GameSchema);
+const GameModel = model("games", GameSchema);
 module.exports = GameModel;

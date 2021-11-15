@@ -43,15 +43,19 @@ function createSeed() {
   return new Promise(async (resolve, reject) => {
     try {
       const selectUsers = await userModel.find();
-      console.log(selectUsers[1]._id)
+      console.log(selectUsers[0])
+      console.log(selectUsers[1])
       gamesSeed.forEach((el) => {
+        console.log(el.players[1].score)
         el.players[0].player1 =
           selectUsers[0]._id;
         el.players[1].player2 =
           selectUsers[1]._id;
+console.log(el)
+        });
 
-        resolve();
-      });
+       // console.log(gamesSeed);
+        resolve(gamesSeed);
     } catch (err) {
       reject(err);
     }
@@ -59,6 +63,7 @@ function createSeed() {
 }
 
 createSeed().then((r) => {
+  console.log(r);
   gameModel
     .deleteMany()
     .then(() => {

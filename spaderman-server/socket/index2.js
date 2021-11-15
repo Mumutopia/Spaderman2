@@ -27,11 +27,11 @@ module.exports = function initSocket(server) {
 
     });
 
-    socket.on("playerMoving", (movement) =>{
-        console.log("hello")
-        console.log(movement.myYPosition)
-        io.emit("trackMovement",{movement, id : socket.id})
-    })
+    // socket.on("playerMoving", (movement) =>{
+    //     console.log("hello")
+    //     console.log(movement.myYPosition)
+    //     io.emit("trackMovement",{movement, id : socket.id})
+    // })
 
     socket.on("disconnect", () => {
       console.log("Client disconnected");
