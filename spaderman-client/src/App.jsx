@@ -4,6 +4,7 @@ import "./styles/MainTitle.css"
 import React from "react";
 
 import { Routes, Route } from "react-router-dom";
+import Game from "./views/Game";
 import Test from "./views/Test";
 import Index from "./views/Index";
 import Home from "./views/Home";
@@ -17,7 +18,7 @@ function App() {
 
       <Routes>
         
-        <Route path="/test" element={<Test />} />
+        <Route path="/game" element={<Game />} />
         <Route path="/" element={<Index />} />
         <Route path="/home" element={<Home />} />
         <Route path="/home/play" element={<Play />} />

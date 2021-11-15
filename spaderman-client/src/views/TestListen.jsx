@@ -5,12 +5,15 @@ import React, {useEffect} from 'react'
 
 
 
-export default function TestListen({count,handleOther, handleCount}) {
+export default function TestListen({count,handlingInput,handleOther, handleCount}) {
 
 console.log("render")
 
 useEffect(()=>{
-    console.log("count ici ",count)
+    window.addEventListener("keyup", (event) => {
+        handlingInput(event)
+    })
+    
 },[])
 
 const setCondition = () => {
