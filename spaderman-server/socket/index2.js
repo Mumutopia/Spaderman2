@@ -39,6 +39,10 @@ module.exports = function initSocket(server) {
       socket.broadcast.emit("otherPlayerBomb", {myBomb, id: socket.id} )
     })
 
+    socket.on("sendStunned", (message)=> {
+      socket.broadcast.emit("Stunned",(message))
+    })
+
     socket.on("disconnect", () => {
       console.log("Client disconnected");
       usersBuffer = usersConnected;

@@ -1,0 +1,49 @@
+#board-wrapper {
+  display: grid;
+  background-image: url("../img/desert-board-3.png");
+  background-repeat: no-repeat;
+  
+  width: 100%;
+  height: 100%;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  border: 8px solid;
+}
+
+#board-wrapper > * {
+    border: 1px solid #0000004f;  
+}
+
+.cell {
+    background-color: black;
+    height: 100%;
+    width: 100%;
+}
+
+.dug {
+    background-image: url("../img/hole2.png");
+    background-size: 80%, 80%;
+    background-size: 60px, 60px;
+  }
+
+.myPlayer {
+    background-image: url("../img/blue-shovel-mini2.png");
+    background-size: 80%, 80%;
+    background-repeat: no-repeat;
+}
+.otherPlayer {
+    background-image: url("../img/red-shovel-mini2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.bombs {
+    background-image: url("../img/bomb2.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+.bomb-radius {
+    background-image: url("../img/bomb-radius.png");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
