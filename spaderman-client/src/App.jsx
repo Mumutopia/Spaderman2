@@ -9,6 +9,7 @@ import Test from "./views/Test";
 import Index from "./views/Index";
 import Home from "./views/Home";
 import Play from "./views/Play";
+import Lobby from "./views/Lobby"
 // pages components
 
 function App() {
@@ -18,12 +19,13 @@ function App() {
 
       <Routes>
         
-        <Route path="/game" element={<Game />} />
+        <Route path="/game/:name" element={<Game />} />
+        <Route path="/lobby/:name" element={<Lobby />} />
         <Route path="/" element={<Index />} />
         <Route path="/home" element={<Home />} />
-        <Route path="/home/play" element={<Play />} />
-        <Route path="/home/leaderBoard" element={<Play />} />
-        <Route path="/home/howtoplay" element={<Play />} />
+        <Route path="/play" element={<Play />} />
+        <Route path="/leaderBoard" element={<Play />} />
+        <Route path="/howtoplay" element={<Play />} />
       </Routes>
     </React.Fragment>
   );

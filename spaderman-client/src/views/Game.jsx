@@ -1,41 +1,50 @@
 import "../styles/Game.css";
 import React, { useState, useEffect, useRef } from "react";
-import socketIOClient from "socket.io-client";
+import { useParams} from "react-router";
+import { socket } from "../js/socket";
 import { board } from "../js/board.js";
 import GameListen from "../components/GameListen.jsx";
 import GameDisplay from "../components/GameDisplay.jsx";
 import GameBoard from "../components/GameBoard";
 
-const ENDPOINT = "http://localhost:5001";
-const socket = socketIOClient(ENDPOINT);
+
+
+let bombAudio = [
+    new Audio("/sounds/bomb1.mp3"),
+    new Audio("/sounds/bomb2.mp3"),
+    new Audio("/sounds/bomb3.mp3"),
+    new Audio("/sounds/bomb4.mp3"),
+    new Audio("/sounds/bomb5.mp3"),
+  ];
+
+  let digAudio = [
+    new Audio("/sounds/digging.mp3"),
+    new Audio("/sounds/digging2.mp3"),
+  ];
+
+  let gameAudio = new Audio("/sounds/game-music2.mp3");
+  let gameIntro = new Audio("/sounds/intro2.mp3");
+  let gameOutro = new Audio("/sounds/intro2.mp3");
+  
+  
+
+  let getItemAudio = [
+    new Audio("/sounds/get-item.mp3"),
+    new Audio("/sounds/get-item2.mp3"),
+    new Audio("/sounds/get-item3.mp3"),
+  ];
+
 
 export default function Game() {
 
-  // let digAudio = [
-  //   new Audio("/sounds/digging.mp3"),
-  //   new Audio("/sounds/digging2.mp3"),
-  // ];
+
   // function randomItemsSound() {
     
   //   setTimeout(() => {
   //     getItemAudio[Math.floor(Math.random() * 3)].play();
   //   }, 1000);
   // }
-  // let getItemAudio = [
-  //   new Audio("/sounds/get-item.mp3"),
-  //   new Audio("/sounds/get-item2.mp3"),
-  //   new Audio("/sounds/get-item3.mp3"),
-  // ];
-  // let gameAudio = new Audio("/sounds/game-music2.mp3");
-  // let gameIntro = new Audio("/sounds/intro2.mp3");
-  // let gameOutro = new Audio("/sounds/intro2.mp3");
-  // let bombAudio = [
-  //   new Audio("/sounds/bomb1.mp3"),
-  //   new Audio("/sounds/bomb2.mp3"),
-  //   new Audio("/sounds/bomb3.mp3"),
-  //   new Audio("/sounds/bomb4.mp3"),
-  //   new Audio("/sounds/bomb5.mp3"),
-  // ];
+  
 
   const [myXPosition, setMyxPosition] = useState(5);
   const [myYPosition, setMyyPosition] = useState(5);
@@ -53,6 +62,9 @@ export default function Game() {
   const myYPositionRef = useRef(myYPosition);
   const otherXPositionRef = useRef(otherXPosition);
   const otherYPositionRef = useRef(otherYPosition);
+  const params= useParams()
+ const room = params.name
+  
 
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
@@ -93,7 +105,7 @@ export default function Game() {
           break;
         case "l":
           dig(myXPosition, myYPosition);
-          // digAudio[Math.floor(Math.random() * 2)].play();
+          digAudio[Math.floor(Math.random() * 2)].play();
           setIsBusy(true);
           setTimeout(() => {
             setIsBusy(false);
@@ -155,9 +167,9 @@ export default function Game() {
           otherYPositionRef.current
         )
       ) {
-        socket.emit("sendStunned", true);
+        socket.emit("sendStunned",room, true);
         setTimeout(() => {
-          socket.emit("sendStunned", false);
+          socket.emit("sendStunned",room, false);
         }, 1800);
       }
     }, 2000);
@@ -169,18 +181,18 @@ export default function Game() {
     cloneBoard[y][x] += "T";
 
     setBoardGame(cloneBoard);
-    socket.emit("digBoard", boardGame);
+    socket.emit("digBoard",room, boardGame);
     setTimeout(function () {
       cloneBoard[y][x] = bufferValue[0];
       console.log(cloneBoard);
       addRadiusX(x, y);
       addRadiusY(x, y);
-      socket.emit("digBoard", boardGame);
-      // bombAudio[Math.floor(Math.random() * 5)].play();
+      socket.emit("digBoard",room, boardGame);
+      bombAudio[Math.floor(Math.random() * 5)].play();
       setTimeout(() => {
         removeRadiusX(x, y);
         removeRadiusY(x, y);
-        socket.emit("digBoard", boardGame);
+        socket.emit("digBoard",room, boardGame);
       }, 250);
     }, 2000);
   };
@@ -256,14 +268,18 @@ export default function Game() {
 
         break;
     }
-    socket.emit("digBoard", boardGame);
+    socket.emit("digBoard",room, boardGame);
   };
 
   useEffect(() => {
-    socket.on("trackMovement", (data) => {
-      if (socket.id !== data.id) {
-        setOtherXPosition(data.movement.myXPosition);
-        setOtherYPosition(data.movement.myYPosition);
+    
+    socket.emit("new-user",params.name)
+
+    socket.on("trackMovement", (myXPosition,myYPosition,id) => {
+      console.log(myXPosition);
+      if (socket.id !== id) {
+        setOtherXPosition(myXPosition);
+        setOtherYPosition(myYPosition);
       }
     });
     socket.on("refreshBoard", (props) => {
@@ -285,12 +301,16 @@ export default function Game() {
       setIsStunned(message);
       setMyScore((myScore) => myScore - 100);
     });
+
+ 
   }, []);
 
+  
   useEffect(() => {
-    socket.emit("playerMoving", { myXPosition, myYPosition });
-    socket.emit("transferScore", myScore);
-    socket.emit("transferBomb", myBomb);
+    
+    socket.emit("playerMoving",  myXPosition,myYPosition,room);
+    socket.emit("transferScore",params.name, myScore);
+    socket.emit("transferBomb",room, myBomb);
   }, [myXPosition, myYPosition, myScore, myBomb, isBusy]);
 
   useEffect(() => {

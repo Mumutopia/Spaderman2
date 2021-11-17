@@ -10,6 +10,8 @@ module.exports = function initSocket(server) {
     },
   });
 
+
+  
   /**
    *
    * Listening and emiting with Io io
@@ -21,27 +23,41 @@ module.exports = function initSocket(server) {
     usersConnected.push(socket.id);
     console.log(usersConnected);
 
-    socket.on("playerMoving", (movement) => {
-      io.emit("trackMovement", { movement, id: socket.id });
+    socket.on("new-user", (room) =>{
+      socket.join(room)
+      
+      console.log("the user is",socket.id,'jas joined', room)
+      
+    })
+    socket.on("playerMoving", (myXPosition, myYPosition, room) => {
+      
+      socket.to(room).emit("trackMovement", myXPosition,myYPosition,socket.id);
     });
 
-    socket.on("digBoard", (boardGame) => {
+    socket.on("digBoard", (room,boardGame) => {
       
-      socket.broadcast.emit("refreshBoard", boardGame)
+      socket.to(room).emit("refreshBoard", boardGame)
     });
 
-    socket.on("transferScore", (myScore) =>{
-      console.log("score",myScore)
-      socket.broadcast.emit("otherPlayerScore", {myScore, id: socket.id} )
-    })
-    socket.on("transferBomb", (myBomb) =>{
+    socket.on("transferScore", (room, myScore) =>{
       
-      socket.broadcast.emit("otherPlayerBomb", {myBomb, id: socket.id} )
+      socket.to(room).emit("otherPlayerScore", {myScore, id: socket.id} )
+    })
+    socket.on("transferBomb", (room, myBomb) =>{
+      
+      socket.to(room).emit("otherPlayerBomb", {myBomb, id: socket.id} )
     })
 
-    socket.on("sendStunned", (message)=> {
-      socket.broadcast.emit("Stunned",(message))
+    socket.on("sendStunned", (room,message)=> {
+      socket.to(room).emit("Stunned",( message))
     })
+
+    socket.on("createRoom",(room) => {
+      console.log("received")
+      io.emit("roomCreated",room)
+    }
+
+   )
 
     socket.on("disconnect", () => {
       console.log("Client disconnected");

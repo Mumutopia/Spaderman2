@@ -1,0 +1,24 @@
+.lobby-wrapper {
+    background-image: url("../img/desert-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+
+    display: grid;
+    grid-template-columns: 2fr 1fr 2fr;
+    grid-template-rows: 1fr 3fr 1fr
+}
+
+.lobby-header {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-end: 2;
+}
+
+.lobby-grid1{
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 3;
+}
