@@ -6,7 +6,8 @@
     "start": "node ./bin/www",
     "dev":  "nodemon ./bin/www ",
     "seed:users": "node ./seeds/Users.js",
-    "seed:games": "node ./seeds/Games.js"
+    "seed:games": "node ./seeds/Games.js",
+    "seed:rooms": "node ./seeds/Rooms.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",

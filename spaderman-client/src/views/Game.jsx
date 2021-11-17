@@ -56,24 +56,44 @@ export default function Game() {
   const [otherScore, setOtherScore] = useState(0);
   const [myBomb, setMyBomb] = useState(30);
   const [otherBomb, setOtherBomb] = useState(30);
-  const [isBusy, setIsBusy] = useState(false);
+  const [isBusy, setIsBusy] = useState(true);
   const [isStunned, setIsStunned] = useState(false);
+  const [gameTimer,setGameTimer] = useState(12)
   const myXPositionRef = useRef(myXPosition);
   const myYPositionRef = useRef(myYPosition);
   const otherXPositionRef = useRef(otherXPosition);
   const otherYPositionRef = useRef(otherYPosition);
+  const gameTimerRef = useRef(gameTimer)
   const params= useParams()
- const room = params.name
+ const room = params.id
   
 
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
   otherXPositionRef.current = otherXPosition;
   otherYPositionRef.current = otherYPosition;
+  gameTimerRef.current = gameTimer;
 
   const bombRadius = 2;
 
   let cloneBoard;
+
+  function startGame (){
+    setIsBusy(false)
+  let gameTime = setInterval(() => {
+    setGameTimer((time) => time-1)
+    
+      if (gameTimerRef.current <= 0) {
+        clearInterval(gameTime)
+        setIsBusy(true)
+      }
+    }, 1000);
+  }
+
+  function sendSignal (){
+    console.log('sending')
+    socket.emit("sendStartSignal",room)
+  }
 
   function storeEvent(evt) {
     setEvent((event) => (event = evt));
@@ -273,7 +293,7 @@ export default function Game() {
 
   useEffect(() => {
     
-    socket.emit("new-user",params.name)
+    socket.emit("new-user",params.id)
 
     socket.on("trackMovement", (myXPosition,myYPosition,id) => {
       console.log(myXPosition);
@@ -302,6 +322,10 @@ export default function Game() {
       setMyScore((myScore) => myScore - 100);
     });
 
+    socket.on("startSignal",()=>{
+      console.log("game on !")
+      startGame()
+    })
  
   }, []);
 
@@ -309,9 +333,9 @@ export default function Game() {
   useEffect(() => {
     
     socket.emit("playerMoving",  myXPosition,myYPosition,room);
-    socket.emit("transferScore",params.name, myScore);
+    socket.emit("transferScore",params.id, myScore);
     socket.emit("transferBomb",room, myBomb);
-  }, [myXPosition, myYPosition, myScore, myBomb, isBusy]);
+  }, [myXPosition, myYPosition, myScore, myBomb, isBusy,gameTimer]);
 
   useEffect(() => {
     handlingInput(event);
@@ -332,7 +356,12 @@ export default function Game() {
           otherScore={otherScore}
           myBomb={myBomb}
           otherBomb={otherBomb}
+          timer={gameTimer}
         />
+        <div>
+        <button onClick={sendSignal}>Start </button>
+        <button >Quit Game </button>
+        </div>
         <GameBoard
           board={boardGame}
           myXPosition={myXPosition}

@@ -8,8 +8,11 @@ export default function GameDisplay({
   myScore,
   otherScore,
   myBomb,
-  otherBomb
+  otherBomb,
+  timer,
 }) {
+
+  
   return (
     <div>
       my pos : [{myXPosition},{myYPosition}] other pos :[{otherXPosition},
@@ -17,6 +20,7 @@ export default function GameDisplay({
       other score :{otherScore}
       my bombs: {myBomb}
       other bombs : {otherBomb}
+      Time left : {timer}
     </div>
   );
 }

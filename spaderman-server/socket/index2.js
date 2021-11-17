@@ -29,6 +29,11 @@ module.exports = function initSocket(server) {
       console.log("the user is",socket.id,'jas joined', room)
       
     })
+    socket.on("sendStartSignal",(room)=>{
+      console.log("receive !");
+      io.to(room).emit("startSignal")
+    })
+
     socket.on("playerMoving", (myXPosition, myYPosition, room) => {
       
       socket.to(room).emit("trackMovement", myXPosition,myYPosition,socket.id);
@@ -52,12 +57,7 @@ module.exports = function initSocket(server) {
       socket.to(room).emit("Stunned",( message))
     })
 
-    socket.on("createRoom",(room) => {
-      console.log("received")
-      io.emit("roomCreated",room)
-    }
-
-   )
+   
 
     socket.on("disconnect", () => {
       console.log("Client disconnected");

@@ -1,12 +1,16 @@
 const { Schema, model } = require("mongoose");
 
 const RoomSchema = new Schema({
-  name : {
+  roomName : {
       type :String,
       unique: true,
+  },
+  numberOfPlayers : {
+    type : Number,
+    default : 0
   }
 });
 
 
-const GameModel = model("games", GameSchema);
-module.exports = GameModel;
+const RoomModel = model("rooms", RoomSchema);
+module.exports = RoomModel;

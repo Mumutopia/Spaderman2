@@ -1,63 +1,90 @@
-import React, {useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { socket } from "../js/socket";
 import "../styles/Play.css";
 import HomeButton from "../components/HomeButton";
 import ButtonLink from "../components/ButtonLink";
 import { Link } from "react-router-dom";
+import APIHandler from "../api/APIHandler";
+import axios from "axios";
 
 export default function Play() {
+  const [createRoom, SetcreateRoom] = useState("");
 
-  const [createInput,SetcreateInput] = useState("")  
-  const rooms = { name: "tot", name2: "tit" };
-  const [test,setTest] =useState("")
+  const [test, setTest] = useState("");
+  const [rooms, setRooms] = useState(9);
+  console.log(createRoom);
 
-  const handleClick =() =>{
-    socket.emit("createRoom",createInput)
-    console.log(createInput);
-  }
+  const handleClick = async (e) => {
+    console.log(createRoom);
+    e.preventDefault();
+    try {
+      const res = await axios.post("http://localhost:5001/play/rooms",createRoom)
+      console.log(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+    
+  };
 
-  useEffect(()=>{
-    console.log("render")
-  },[createInput,test])
+ 
 
-  useEffect(()=>{
-      console.log("ici")
-      socket.on("roomCreated",(room)=>{
-        setTest(room)
-       console.log(room)
-      }
-      )
-  },[])
+  const fetchRooms = async () => {
+    try {
+      const dataRooms = await axios.get("http://localhost:5001/play/rooms");
+      
+      setRooms(dataRooms.data);
+      
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
-  return (
+  useEffect(() => {}, [createRoom, test, rooms]);
+
+  useEffect(() => {
+    fetchRooms();
+  }, []);
+
+  return isNaN(rooms) ? (
     <div className="play-wrapper">
-      <HomeButton className="home" name="home">
+      {/* <HomeButton className="home" name="home">
         Home
       </HomeButton>
       <ButtonLink className="logout" name="logout">
         Logout
-      </ButtonLink>
-      <div className="grid-1">
-        {Object.keys(rooms).map((room, i) => {
+      </ButtonLink> */}
+      <div className="grid-1"></div>
+      <div>
+        {rooms.map((room, i) => {
           return (
-            <Link
-              key={i}
-              to={{
-                pathname: `/game/${room}`,
-                state: room,
-              }}
-            >
-              Join {room}
-            </Link>
+            <div key={i}>
+              <Link
+                to={{
+                  pathname: `/game/${room._id}`,
+                  state: room,
+                }}
+              >
+                Join {room.roomName}
+              </Link>
+              <p>Number of players : {room.numberOfPlayers}</p>
+            </div>
           );
         })}
       </div>
+
+      <div className="grid-2">
+        <form >
+          <input name="roomName" type="text" onChange={(event) => SetcreateRoom(event.target.value)} />
+          <button onClick={handleClick}>Create</button>
+        </form>
+      </div>
+      <div className="grid-3"></div>
+    </div>
+  ) : (
+    <div className="play-wrapper">
       <div className="grid-2">
         
-          <input onChange={event => SetcreateInput(event.target.value)} />
-          <button onClick={handleClick}>Create</button>
-          <p>{test}</p>
-        
+        <p>{test}</p>
       </div>
       <div className="grid-3"></div>
     </div>
