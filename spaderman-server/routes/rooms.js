@@ -10,11 +10,19 @@ router.get("/rooms", async(req,res,next) => {
         next(err);
       }
 })
-router.post("/rooms", async(req,res,next) => {
-    
+router.post("/rooms/", async(req,res,next) => {
+   
     try {
         const rooms = await RoomModel.create(req.body);
         res.status(201).json(rooms)
+    } catch (err) {
+        next(err);
+      }
+})
+
+router.delete("/rooms/:id", async(req,res,next)=>{
+    try {
+        await RoomModel.findByIdAndDelete(req.params.id)
     } catch (err) {
         next(err);
       }

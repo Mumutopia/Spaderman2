@@ -1,51 +1,55 @@
 import "../styles/Game.css";
 import React, { useState, useEffect, useRef } from "react";
-import { useParams} from "react-router";
+import { useParams } from "react-router";
 import { socket } from "../js/socket";
 import { board } from "../js/board.js";
+import { Link,Navigate } from "react-router-dom";
 import GameListen from "../components/GameListen.jsx";
 import GameDisplay from "../components/GameDisplay.jsx";
 import GameBoard from "../components/GameBoard";
-
-
+import DisplayWinner from "../components/DisplayWinner";
+import APIHandler from "../api/APIHandler"
 
 let bombAudio = [
-    new Audio("/sounds/bomb1.mp3"),
-    new Audio("/sounds/bomb2.mp3"),
-    new Audio("/sounds/bomb3.mp3"),
-    new Audio("/sounds/bomb4.mp3"),
-    new Audio("/sounds/bomb5.mp3"),
-  ];
+  new Audio("/sounds/bomb1.mp3"),
+  new Audio("/sounds/bomb2.mp3"),
+  new Audio("/sounds/bomb3.mp3"),
+  new Audio("/sounds/bomb4.mp3"),
+  new Audio("/sounds/bomb5.mp3"),
+];
 
-  let digAudio = [
-    new Audio("/sounds/digging.mp3"),
-    new Audio("/sounds/digging2.mp3"),
-  ];
+let digAudio = [
+  new Audio("/sounds/digging.mp3"),
+  new Audio("/sounds/digging2.mp3"),
+];
 
-  let gameAudio = new Audio("/sounds/game-music2.mp3");
-  let gameIntro = new Audio("/sounds/intro2.mp3");
-  let gameOutro = new Audio("/sounds/intro2.mp3");
-  
-  
+let gameAudio = new Audio("/sounds/game-music2.mp3");
+let gameIntro = new Audio("/sounds/intro2.mp3");
+let gameOutro = new Audio("/sounds/intro2.mp3");
 
-  let getItemAudio = [
-    new Audio("/sounds/get-item.mp3"),
-    new Audio("/sounds/get-item2.mp3"),
-    new Audio("/sounds/get-item3.mp3"),
-  ];
+let getItemAudio = [
+  new Audio("/sounds/get-item.mp3"),
+  new Audio("/sounds/get-item2.mp3"),
+  new Audio("/sounds/get-item3.mp3"),
+];
 
+/*
+const [players, setWhoIsWho] = useState({
+    p1: null,
+    p2: null,
+  })
+const players =  {
+  p1: null,
+  p2: null,
+};
+
+const currentPlayerToSet = Object.entries(players).find(p => p === null);
+currentPlayerToSet = "socket-id"
+*/
 
 export default function Game() {
-
-
-  // function randomItemsSound() {
-    
-  //   setTimeout(() => {
-  //     getItemAudio[Math.floor(Math.random() * 3)].play();
-  //   }, 1000);
-  // }
   
-
+  
   const [myXPosition, setMyxPosition] = useState(5);
   const [myYPosition, setMyyPosition] = useState(5);
   const [otherXPosition, setOtherXPosition] = useState(5);
@@ -58,42 +62,70 @@ export default function Game() {
   const [otherBomb, setOtherBomb] = useState(30);
   const [isBusy, setIsBusy] = useState(true);
   const [isStunned, setIsStunned] = useState(false);
-  const [gameTimer,setGameTimer] = useState(12)
+  const [gameTimer, setGameTimer] = useState(12);
+  const [hideStartButton,setHideStartButton] = useState()
+  const [displayResult,setDisplayResult] = useState("hide-result")
   const myXPositionRef = useRef(myXPosition);
   const myYPositionRef = useRef(myYPosition);
   const otherXPositionRef = useRef(otherXPosition);
   const otherYPositionRef = useRef(otherYPosition);
-  const gameTimerRef = useRef(gameTimer)
-  const params= useParams()
- const room = params.id
-  
+  const gameTimerRef = useRef(gameTimer);
+  const params = useParams();
+  const room = params.id;
+  const myScoreRef = useRef(myScore)
+  const otherScoreRef= useRef(otherScore)
 
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
   otherXPositionRef.current = otherXPosition;
   otherYPositionRef.current = otherYPosition;
   gameTimerRef.current = gameTimer;
+  myScoreRef.current = myScore
+  otherScoreRef.current = otherScore
 
   const bombRadius = 2;
 
   let cloneBoard;
+  
+  const leaveGame = async () => {
+    try {
+      await APIHandler.delete(`/rooms/${room}`)
+    }  catch (err) {
+      console.error(err);
+    }
 
-  function startGame (){
-    setIsBusy(false)
-  let gameTime = setInterval(() => {
-    setGameTimer((time) => time-1)
     
+  }
+
+  function startGame() {
+    setIsBusy(false);
+    setHideStartButton("start-button-hidden")
+    let gameTime = setInterval(() => {
+      setGameTimer((time) => time - 1);
+
       if (gameTimerRef.current <= 0) {
-        clearInterval(gameTime)
-        setIsBusy(true)
+        clearInterval(gameTime);
+        setIsBusy(true);
+        setDisplayResult("display-result")
+        saveResult()
       }
     }, 1000);
   }
 
-  function sendSignal (){
-    console.log('sending')
-    socket.emit("sendStartSignal",room)
+  function sendSignal() {
+    console.log("sending");
+    socket.emit("sendStartSignal", room);
   }
+  
+  const saveResult = async() => {
+    const result = {
+      player:"toto",
+      score : myScoreRef.current,
+      otherScore : otherScoreRef.current
+    }
+    console.log(result)
+  }
+
 
   function storeEvent(evt) {
     setEvent((event) => (event = evt));
@@ -187,9 +219,9 @@ export default function Game() {
           otherYPositionRef.current
         )
       ) {
-        socket.emit("sendStunned",room, true);
+        socket.emit("sendStunned", room, true);
         setTimeout(() => {
-          socket.emit("sendStunned",room, false);
+          socket.emit("sendStunned", room, false);
         }, 1800);
       }
     }, 2000);
@@ -201,18 +233,18 @@ export default function Game() {
     cloneBoard[y][x] += "T";
 
     setBoardGame(cloneBoard);
-    socket.emit("digBoard",room, boardGame);
+    socket.emit("digBoard", room, boardGame);
     setTimeout(function () {
       cloneBoard[y][x] = bufferValue[0];
       console.log(cloneBoard);
       addRadiusX(x, y);
       addRadiusY(x, y);
-      socket.emit("digBoard",room, boardGame);
+      socket.emit("digBoard", room, boardGame);
       bombAudio[Math.floor(Math.random() * 5)].play();
       setTimeout(() => {
         removeRadiusX(x, y);
         removeRadiusY(x, y);
-        socket.emit("digBoard",room, boardGame);
+        socket.emit("digBoard", room, boardGame);
       }, 250);
     }, 2000);
   };
@@ -262,25 +294,25 @@ export default function Game() {
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 100);
-        
+
         break;
       case "BR":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 200);
-        
+
         break;
       case "GR":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 500);
-        
+
         break;
       case "B":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyBomb((myBomb) => myBomb + 15);
-        
+
         break;
       default:
         cloneBoard[y][x] = "E";
@@ -288,14 +320,13 @@ export default function Game() {
 
         break;
     }
-    socket.emit("digBoard",room, boardGame);
+    socket.emit("digBoard", room, boardGame);
   };
 
   useEffect(() => {
-    
-    socket.emit("new-user",params.id)
+    socket.emit("new-user", params.id);
 
-    socket.on("trackMovement", (myXPosition,myYPosition,id) => {
+    socket.on("trackMovement", (myXPosition, myYPosition, id) => {
       console.log(myXPosition);
       if (socket.id !== id) {
         setOtherXPosition(myXPosition);
@@ -322,20 +353,17 @@ export default function Game() {
       setMyScore((myScore) => myScore - 100);
     });
 
-    socket.on("startSignal",()=>{
-      console.log("game on !")
-      startGame()
-    })
- 
+    socket.on("startSignal", () => {
+      console.log("game on !");
+      startGame();
+    });
   }, []);
 
-  
   useEffect(() => {
-    
-    socket.emit("playerMoving",  myXPosition,myYPosition,room);
-    socket.emit("transferScore",params.id, myScore);
-    socket.emit("transferBomb",room, myBomb);
-  }, [myXPosition, myYPosition, myScore, myBomb, isBusy,gameTimer]);
+    socket.emit("playerMoving", myXPosition, myYPosition, room);
+    socket.emit("transferScore", params.id, myScore);
+    socket.emit("transferBomb", room, myBomb);
+  }, [myXPosition, myYPosition, myScore, myBomb, isBusy, gameTimer,displayResult]);
 
   useEffect(() => {
     handlingInput(event);
@@ -359,9 +387,10 @@ export default function Game() {
           timer={gameTimer}
         />
         <div>
-        <button onClick={sendSignal}>Start </button>
-        <button >Quit Game </button>
+          <button className={hideStartButton}  onClick={sendSignal}>Start </button>
+          <button onClick={leaveGame}><Link to="/home">Quit </Link> </button>
         </div>
+        <DisplayWinner  myScore={myScore} otherScore={otherScore} displayResult={displayResult}  />
         <GameBoard
           board={boardGame}
           myXPosition={myXPosition}

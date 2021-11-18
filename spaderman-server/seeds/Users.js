@@ -7,13 +7,13 @@ const userModel = require("./../models/User.js");
 
 const userSeed = [
     {
-   userName : "Player1",
+   username : "Player1",
    avatar : "",
    email :"player1@player.player"
    
 },
     {
-   userName : "Player2",
+   username : "Player2",
    avatar : "",
    email :"player2@player.player"      
 }

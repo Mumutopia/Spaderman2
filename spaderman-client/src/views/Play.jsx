@@ -12,34 +12,28 @@ export default function Play() {
 
   const [test, setTest] = useState("");
   const [rooms, setRooms] = useState(9);
-  console.log(createRoom);
 
   const handleClick = async (e) => {
     console.log(createRoom);
+    const toSend = { roomName: createRoom };
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5001/play/rooms",createRoom)
-      console.log(res.data);
+      await APIHandler.post("/play/rooms", toSend);
     } catch (err) {
       console.error(err);
     }
-    
+    fetchRooms();
   };
-
- 
 
   const fetchRooms = async () => {
     try {
-      const dataRooms = await axios.get("http://localhost:5001/play/rooms");
-      
+      const dataRooms = await APIHandler.get("/play/rooms");
+
       setRooms(dataRooms.data);
-      
     } catch (err) {
       console.error(err);
     }
   };
-
-  useEffect(() => {}, [createRoom, test, rooms]);
 
   useEffect(() => {
     fetchRooms();
@@ -73,9 +67,13 @@ export default function Play() {
       </div>
 
       <div className="grid-2">
-        <form >
-          <input name="roomName" type="text" onChange={(event) => SetcreateRoom(event.target.value)} />
-          <button onClick={handleClick}>Create</button>
+        <form onSubmit={handleClick}>
+          <input
+            name="roomName"
+            type="text"
+            onChange={(event) => SetcreateRoom(event.target.value)}
+          />
+          <button>Create</button>
         </form>
       </div>
       <div className="grid-3"></div>
@@ -83,7 +81,6 @@ export default function Play() {
   ) : (
     <div className="play-wrapper">
       <div className="grid-2">
-        
         <p>{test}</p>
       </div>
       <div className="grid-3"></div>

@@ -1,0 +1,41 @@
+.leaderboard-wrapper{
+    background-image: url("../img/desert-background.jpg");
+    background-repeat: no-repeat;
+    background-size: cover;
+    height: 100vh;
+    width: 100vw;
+
+    display: grid;
+   grid-template-columns: 2fr 2fr 2fr;
+   grid-template-rows: repeat(5,1fr);
+   justify-items: center;
+   align-items: center;
+
+}
+
+.grid-1-leaderboard {
+    
+    grid-column-start: 1;
+    grid-column-end: -1;
+    grid-row-start: 1;
+    grid-row-end: 2;
+}
+
+.grid-2-leaderboard-buttons {
+    grid-column-start: 1;
+    grid-column-end: 2;
+    grid-row-start: 2;
+    grid-row-end: 4;
+    
+    
+
+}
+
+
+
+.grid-3-table-leaderboard {
+    grid-column-start: 2;
+    grid-column-end: 3;
+    grid-row-start: 2;
+    grid-row-end: 4;
+}
