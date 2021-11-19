@@ -3,7 +3,7 @@ import React from "react";
 export default function DisplayWinner({ myScore, otherScore,displayResult}) {
   console.log(displayResult);
   if (myScore === otherScore) {
-    return <p className={displayResult}>Draw</p>;
+    return <h2 className={displayResult}>Draw</h2>;
   } else
-    return myScore > otherScore ? <p className={displayResult}>you win</p> : <p className={displayResult}> you lose</p>;
+    return myScore > otherScore ? <h2 className={displayResult}>you win</h2> : <h2 className={displayResult}> you lose</h2>;
 }

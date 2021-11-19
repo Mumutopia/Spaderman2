@@ -6,10 +6,11 @@ import { useAuth } from "../auth/UserContext";
 
 export default function Home() {
    
+    const {currentUser} = useAuth()
     
     return (
         <div className="home-wrapper">
-            <header className="header-home">Welcome Name</header>
+            <header className="header-home">Welcome {currentUser?.username}</header>
             <Logout/>
             <img className="avatar-home" src="/img/blue-shovel4.png" alt="avatar" />
             <ButtonLink className="grid-1" name="play">Play</ButtonLink>

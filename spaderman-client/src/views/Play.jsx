@@ -12,6 +12,7 @@ export default function Play() {
 
   const [test, setTest] = useState("");
   const [rooms, setRooms] = useState(9);
+  const [refreshRooms, setRefreshRooms] = useState(0);
 
   const handleClick = async (e) => {
     console.log(createRoom);
@@ -35,8 +36,36 @@ export default function Play() {
     }
   };
 
+   
+  const increasePlayersInRoom = async (roomId) => {
+    try {
+      console.log()
+      const data ={
+        _id:roomId,
+        numberOfPlayers :+1
+      }
+
+      await APIHandler.patch("/play/rooms",data)
+      
+    } catch (error) {
+      
+    }
+  }
+
   useEffect(() => {
     fetchRooms();
+  }, [refreshRooms]);
+
+  useEffect(() => {
+    fetchRooms();
+    socket.on("refreshRooms", () => {
+      setRefreshRooms((refreshRooms) => refreshRooms + 1);
+    });
+    // socket.on("updateRoomsPlayer",(room) =>{
+    //   increasePlayersInRoom(room)
+    //   setRefreshRooms((refreshRooms) => refreshRooms + 1)
+    // }
+    // )
   }, []);
 
   return isNaN(rooms) ? (
@@ -52,7 +81,8 @@ export default function Play() {
         {rooms.map((room, i) => {
           return (
             <div key={i}>
-              <Link
+             
+             <Link
                 to={{
                   pathname: `/game/${room._id}`,
                   state: room,

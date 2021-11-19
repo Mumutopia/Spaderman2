@@ -3,12 +3,14 @@ import React, { useState, useEffect, useRef } from "react";
 import { useParams } from "react-router";
 import { socket } from "../js/socket";
 import { board } from "../js/board.js";
-import { Link,Navigate } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import GameListen from "../components/GameListen.jsx";
 import GameDisplay from "../components/GameDisplay.jsx";
 import GameBoard from "../components/GameBoard";
 import DisplayWinner from "../components/DisplayWinner";
-import APIHandler from "../api/APIHandler"
+import APIHandler from "../api/APIHandler";
+import { useAuth } from "../auth/UserContext";
+import DisplayOtherPlayer from "../components/DisplayOtherPlayer";
 
 let bombAudio = [
   new Audio("/sounds/bomb1.mp3"),
@@ -16,11 +18,15 @@ let bombAudio = [
   new Audio("/sounds/bomb3.mp3"),
   new Audio("/sounds/bomb4.mp3"),
   new Audio("/sounds/bomb5.mp3"),
+  new Audio("/sounds/bomb6.mp3"),
+  new Audio("/sounds/bomb7.mp3"),
 ];
 
 let digAudio = [
   new Audio("/sounds/digging.mp3"),
   new Audio("/sounds/digging2.mp3"),
+  new Audio("/sounds/digging3.mp3"),
+  new Audio("/sounds/digging4.mp3"),
 ];
 
 let gameAudio = new Audio("/sounds/game-music2.mp3");
@@ -31,7 +37,29 @@ let getItemAudio = [
   new Audio("/sounds/get-item.mp3"),
   new Audio("/sounds/get-item2.mp3"),
   new Audio("/sounds/get-item3.mp3"),
+  new Audio("/sounds/get-item4.mp3"),
+  new Audio("/sounds/get-item5.mp3"),
+  new Audio("/sounds/get-item6.mp3"),
 ];
+
+let gethitAudio = [
+  new Audio("/sounds/hit.mp3"),
+  new Audio("/sounds/hit2.mp3"),
+  new Audio("/sounds/hit3.mp3"),
+  new Audio("/sounds/hit4.mp3"),
+  new Audio("/sounds/hit5.mp3"),
+  new Audio("/sounds/hit6.mp3"),
+  new Audio("/sounds/hit7.mp3"),
+  new Audio("/sounds/hit8.mp3"),
+  new Audio("/sounds/hit6.mp3"),
+]
+
+function randomItemsSound() {
+  
+  setTimeout(() => {
+    getItemAudio[Math.floor(Math.random() * 6)].play();
+  }, 1000);
+}
 
 /*
 const [players, setWhoIsWho] = useState({
@@ -48,8 +76,6 @@ currentPlayerToSet = "socket-id"
 */
 
 export default function Game() {
-  
-  
   const [myXPosition, setMyxPosition] = useState(5);
   const [myYPosition, setMyyPosition] = useState(5);
   const [otherXPosition, setOtherXPosition] = useState(5);
@@ -62,9 +88,12 @@ export default function Game() {
   const [otherBomb, setOtherBomb] = useState(30);
   const [isBusy, setIsBusy] = useState(true);
   const [isStunned, setIsStunned] = useState(false);
-  const [gameTimer, setGameTimer] = useState(12);
-  const [hideStartButton,setHideStartButton] = useState()
-  const [displayResult,setDisplayResult] = useState("hide-result")
+  const [gameTimer, setGameTimer] = useState(30);
+  const [hideStartButton, setHideStartButton] = useState();
+  const [displayResult, setDisplayResult] = useState("hide-result");
+  const [displayDugitems, setDisplayDugItem] = useState("item-dug");
+  const [otherPlayerName, setOtherPlayerName] = useState("waiting for player...")
+
   const myXPositionRef = useRef(myXPosition);
   const myYPositionRef = useRef(myYPosition);
   const otherXPositionRef = useRef(otherXPosition);
@@ -72,42 +101,43 @@ export default function Game() {
   const gameTimerRef = useRef(gameTimer);
   const params = useParams();
   const room = params.id;
-  const myScoreRef = useRef(myScore)
-  const otherScoreRef= useRef(otherScore)
+  const myScoreRef = useRef(myScore);
+  const otherScoreRef = useRef(otherScore);
+
+  const { currentUser } = useAuth();
 
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
   otherXPositionRef.current = otherXPosition;
   otherYPositionRef.current = otherYPosition;
   gameTimerRef.current = gameTimer;
-  myScoreRef.current = myScore
-  otherScoreRef.current = otherScore
+  myScoreRef.current = myScore;
+  otherScoreRef.current = otherScore;
 
   const bombRadius = 2;
 
   let cloneBoard;
-  
+
   const leaveGame = async () => {
     try {
-      await APIHandler.delete(`/rooms/${room}`)
-    }  catch (err) {
+      socket.emit("closeRoom");
+      await APIHandler.delete(`/play/rooms/${room}`);
+    } catch (err) {
       console.error(err);
     }
-
-    
-  }
+  };
 
   function startGame() {
     setIsBusy(false);
-    setHideStartButton("start-button-hidden")
+    setHideStartButton("start-button-hidden");
     let gameTime = setInterval(() => {
       setGameTimer((time) => time - 1);
 
       if (gameTimerRef.current <= 0) {
         clearInterval(gameTime);
         setIsBusy(true);
-        setDisplayResult("display-result")
-        saveResult()
+        setDisplayResult("display-result");
+        saveResult();
       }
     }, 1000);
   }
@@ -116,16 +146,20 @@ export default function Game() {
     console.log("sending");
     socket.emit("sendStartSignal", room);
   }
-  
-  const saveResult = async() => {
-    const result = {
-      player:"toto",
-      score : myScoreRef.current,
-      otherScore : otherScoreRef.current
-    }
-    console.log(result)
-  }
 
+  const saveResult = async () => {
+    try {
+      const result = {
+        player: currentUser._id,
+        score: myScoreRef.current,
+        otherScore: otherScoreRef.current,
+      };
+      console.log(result);
+      await APIHandler.post("/games", result);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   function storeEvent(evt) {
     setEvent((event) => (event = evt));
@@ -157,7 +191,7 @@ export default function Game() {
           break;
         case "l":
           dig(myXPosition, myYPosition);
-          digAudio[Math.floor(Math.random() * 2)].play();
+          digAudio[Math.floor(Math.random() * 4)].play();
           setIsBusy(true);
           setTimeout(() => {
             setIsBusy(false);
@@ -204,6 +238,7 @@ export default function Game() {
           myYPositionRef.current
         )
       ) {
+        gethitAudio[Math.floor(Math.random() * 9)].play();
         setMyScore((myScore) => myScore - 200);
         setIsStunned(true);
         setTimeout(() => {
@@ -240,7 +275,7 @@ export default function Game() {
       addRadiusX(x, y);
       addRadiusY(x, y);
       socket.emit("digBoard", room, boardGame);
-      bombAudio[Math.floor(Math.random() * 5)].play();
+      bombAudio[Math.floor(Math.random() * 7)].play();
       setTimeout(() => {
         removeRadiusX(x, y);
         removeRadiusY(x, y);
@@ -294,24 +329,32 @@ export default function Game() {
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 100);
+        setDisplayDugItem("ruby-dug");
+        randomItemsSound();
 
         break;
       case "BR":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 200);
+        setDisplayDugItem("blueruby-dug");
+        randomItemsSound();
 
         break;
       case "GR":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyScore((myScore) => myScore + 500);
+        setDisplayDugItem("goldruby-dug");
+        randomItemsSound();
 
         break;
       case "B":
         cloneBoard[y][x] = "E";
         setBoardGame(cloneBoard);
         setMyBomb((myBomb) => myBomb + 15);
+        setDisplayDugItem("bomb-dug");
+        randomItemsSound();
 
         break;
       default:
@@ -324,7 +367,7 @@ export default function Game() {
   };
 
   useEffect(() => {
-    socket.emit("new-user", params.id);
+    socket.emit("new-user", params.id, currentUser?.username);
 
     socket.on("trackMovement", (myXPosition, myYPosition, id) => {
       console.log(myXPosition);
@@ -357,13 +400,25 @@ export default function Game() {
       console.log("game on !");
       startGame();
     });
+
+    socket.on("incomingUser",username => {
+      setOtherPlayerName(username)
+    })
   }, []);
 
   useEffect(() => {
     socket.emit("playerMoving", myXPosition, myYPosition, room);
     socket.emit("transferScore", params.id, myScore);
     socket.emit("transferBomb", room, myBomb);
-  }, [myXPosition, myYPosition, myScore, myBomb, isBusy, gameTimer,displayResult]);
+  }, [
+    myXPosition,
+    myYPosition,
+    myScore,
+    myBomb,
+    isBusy,
+    gameTimer,
+    displayResult,
+  ]);
 
   useEffect(() => {
     handlingInput(event);
@@ -374,29 +429,41 @@ export default function Game() {
   return (
     <>
       <div id="game-wrapper">
+        <h2 className="player1-name">{currentUser?.username}</h2>
+        <h2 className="player2-name">{otherPlayerName}</h2>
+        <div className="gameboard-header">
+          <h1 className="main-board-title">Spaderman</h1>
+
+          <div className="header-buttons">
+            <button className={hideStartButton} onClick={sendSignal}>
+              Start{" "}
+            </button>
+            <button className="quit-button" onClick={leaveGame}>
+              <Link to="/home">Quit </Link>{" "}
+            </button>
+          </div>
+
+          <DisplayWinner
+            myScore={myScore}
+            otherScore={otherScore}
+            displayResult={displayResult}
+          />
+        </div>
         <GameListen storeEvent={storeEvent} />
         <GameDisplay
-          otherYPosition={otherYPosition}
-          otherXPosition={otherXPosition}
-          myXPosition={myXPosition}
-          myYPosition={myYPosition}
           myScore={myScore}
-          otherScore={otherScore}
           myBomb={myBomb}
-          otherBomb={otherBomb}
-          timer={gameTimer}
+          displayDugitems={displayDugitems}
         />
-        <div>
-          <button className={hideStartButton}  onClick={sendSignal}>Start </button>
-          <button onClick={leaveGame}><Link to="/home">Quit </Link> </button>
-        </div>
-        <DisplayWinner  myScore={myScore} otherScore={otherScore} displayResult={displayResult}  />
+        <DisplayOtherPlayer otherScore={otherScore} otherBomb={otherBomb} />
+
         <GameBoard
           board={boardGame}
           myXPosition={myXPosition}
           myYPosition={myYPosition}
           otherYPosition={otherYPosition}
           otherXPosition={otherXPosition}
+          gameTimer={gameTimer}
         />
       </div>
     </>

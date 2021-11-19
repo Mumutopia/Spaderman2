@@ -21,7 +21,49 @@
   height: 80%;
 }
 
+.gameboard-header{
+  grid-column-start: 1;
+  grid-column-end: -1;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  display: flex;
+  justify-content: center;
+ flex-direction: column;
+ align-items: center;
+  
+  
+}
+
+.main-board-title {
+  grid-column-start: 2;
+  grid-column-end: 3;
+ 
+}
+
+.player1-name {
+  
+  grid-column-start: 1;
+  grid-column-end: 2;
+  grid-row-start: 1;
+  grid-row-end: 2;
+  justify-content: flex-start;
+}
+
+.player2-name{
+  grid-column-start: 3;
+  grid-column-end: 4
+  ;
+  grid-row-start: 1;
+  grid-row-end: 2;
+}
+
+
+.header-buttons{
+  
+}
+
 .start-button-hidden {
+  
   display: none;
 }
 
@@ -31,4 +73,123 @@
 
 .display-result {
   display: block;
+}
+
+
+
+#myplayer-wrapper{
+  grid-column-start: 1;
+  grid-column-end: 2
+  ;
+  grid-row-start: 2;
+  grid-row-end: 3
+  ;
+}
+
+#otherPlayer-wrapper{
+  grid-column-start: 3;
+  grid-column-end: 4;
+  grid-row-start: 2;
+  grid-row-end: 3
+  ;
+}
+
+
+
+
+#bluePlayer-avatar{
+  width: 60%;
+}
+
+
+#redPlayer-avatar {
+  width: 60%;
+}
+
+.bomb-image {
+  
+  width: 50px;
+}
+
+.ruby-image {
+  width: 50px;
+}
+
+.players-info{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.score-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.bomb-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+
+.avatar-item-wrapper{
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+
+
+#items-dug {
+  background-color:beige;
+  height: 60px;
+  height: 100px;
+  width: 100px;
+  border: 4px solid black;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#item-dug {
+  background-color: beige;
+  height: 60px;
+  width: 60px;
+
+}
+
+#ruby-dug{
+background-image: url("../img/R2.png");
+background-repeat: no-repeat;
+background-size: cover;
+height: 60px;
+  width: 60px;
+}
+
+#blueruby-dug {
+  background-image: url("../img/Br2.png");
+  background-repeat: no-repeat;
+background-size: cover;
+  height: 60px;
+  width: 60px;
+}
+
+#goldruby-dug {
+  background-image: url("../img/Gr2.png");
+  background-repeat: no-repeat;
+background-size: cover;
+  height: 60px;
+  width: 60px;
+}
+
+#bomb-dug{
+  background-image: url("../img/bomb2.png");
+  background-repeat: no-repeat;
+background-size: cover;
+  height: 60px;
+  width: 60px;
 }

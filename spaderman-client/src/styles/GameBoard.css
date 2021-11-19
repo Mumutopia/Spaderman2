@@ -28,7 +28,7 @@
 
 .myPlayer {
     background-image: url("../img/blue-shovel-mini2.png");
-    background-size: 80%, 80%;
+    background-size: cover;
     background-repeat: no-repeat;
 }
 .otherPlayer {
@@ -47,3 +47,4 @@
     background-size: cover;
     background-repeat: no-repeat;
 }
+

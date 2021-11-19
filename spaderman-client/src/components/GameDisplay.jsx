@@ -1,26 +1,25 @@
 import React from "react";
 
-export default function GameDisplay({
-  myXPosition,
-  myYPosition,
-  otherXPosition,
-  otherYPosition,
-  myScore,
-  otherScore,
-  myBomb,
-  otherBomb,
-  timer,
-}) {
-
-  
+export default function GameDisplay({ myScore, myBomb,displayDugitems }) {
   return (
-    <div>
-      my pos : [{myXPosition},{myYPosition}] other pos :[{otherXPosition},
-      {otherYPosition}] my score :{myScore}
-      other score :{otherScore}
-      my bombs: {myBomb}
-      other bombs : {otherBomb}
-      Time left : {timer}
+    <div id="myplayer-wrapper">
+      <div className="players-info">
+        <div className="score-info">
+          <p>Score :{myScore}</p>
+          <img className="ruby-image" src="/img/R2.png" alt="ruby" />
+        </div>
+        <div className="bomb-info">
+          <img className="bomb-image" src="/img/bomb2.png" alt="abomb" />
+          <p> : {myBomb} </p>
+        </div>
+      </div>
+    <div className="avatar-item-wrapper">
+    <img id="bluePlayer-avatar" src="/img/blue-shovel4.png" alt="aspade" />
+    <div  id="items-dug">
+      <div id={displayDugitems}></div>
+    </div>
+    </div>
+      
     </div>
   );
 }
