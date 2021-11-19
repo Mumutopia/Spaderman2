@@ -1,0 +1,16 @@
+.signin-wrapper {
+    background-image: url('../img/signup-signin.png');
+    background-repeat: no-repeat;
+    
+    height: 100vh;
+    width: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form {
+    background-color:#795548c2;
+    width: 30%;
+    height: 20%;
+}

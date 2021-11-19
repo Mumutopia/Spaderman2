@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function GameDisplay({ myScore, myBomb,displayDugitems }) {
+export default function GameDisplay({ myScore, myBomb,displayDugitems,hitPlayerImage }) {
   return (
     <div id="myplayer-wrapper">
       <div className="players-info">
         <div className="score-info">
-          <p>Score :{myScore}</p>
+          <h3>Score :{myScore}</h3>
           <img className="ruby-image" src="/img/R2.png" alt="ruby" />
         </div>
         <div className="bomb-info">
@@ -14,7 +14,7 @@ export default function GameDisplay({ myScore, myBomb,displayDugitems }) {
         </div>
       </div>
     <div className="avatar-item-wrapper">
-    <img id="bluePlayer-avatar" src="/img/blue-shovel4.png" alt="aspade" />
+    <img id="bluePlayer-avatar" src={hitPlayerImage} alt="aspade" />
     <div  id="items-dug">
       <div id={displayDugitems}></div>
     </div>

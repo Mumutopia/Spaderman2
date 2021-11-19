@@ -32,6 +32,12 @@ module.exports = function initSocket(server) {
       io.to(room).emit("startSignal");
     });
 
+    socket.on("newuser-refresh", (room,username)=>{
+      console.log("recuuuuuuu");
+      socket.to(room).emit("incomingUser",username)
+    }
+    )
+
     socket.on("playerMoving", (myXPosition, myYPosition, room) => {
       socket
         .to(room)

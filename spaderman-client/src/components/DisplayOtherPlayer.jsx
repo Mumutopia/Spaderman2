@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function DisplayOtherPlayer({ otherScore, otherBomb }) {
+export default function DisplayOtherPlayer({ otherScore, otherBomb,hitOtherPlayerImage }) {
   return (
     <div id="otherPlayer-wrapper">
       <div className="players-info">
         <div className="score-info">
-          <p>Score : {otherScore}</p>
+          <h3>Score : {otherScore}</h3>
           <img className="ruby-image" src="/img/R2.png" alt="ruby" />
         </div>
         <div className="bomb-info">
@@ -14,7 +14,7 @@ export default function DisplayOtherPlayer({ otherScore, otherBomb }) {
         </div>
       </div>
 
-      <img id="redPlayer-avatar" src="/img/red-shovel4.png" alt="aspade" />
+      <img id="redPlayer-avatar" src={hitOtherPlayerImage} alt="aspade" />
     </div>
   );
 }

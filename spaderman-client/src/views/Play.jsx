@@ -70,13 +70,8 @@ export default function Play() {
 
   return isNaN(rooms) ? (
     <div className="play-wrapper">
-      {/* <HomeButton className="home" name="home">
-        Home
-      </HomeButton>
-      <ButtonLink className="logout" name="logout">
-        Logout
-      </ButtonLink> */}
-      <div className="grid-1"></div>
+      <HomeButton/>
+      <div className="play-grid-1"></div>
       <div>
         {rooms.map((room, i) => {
           return (
@@ -96,7 +91,7 @@ export default function Play() {
         })}
       </div>
 
-      <div className="grid-2">
+      <div className="play-grid-2">
         <form onSubmit={handleClick}>
           <input
             name="roomName"
@@ -106,14 +101,23 @@ export default function Play() {
           <button>Create</button>
         </form>
       </div>
-      <div className="grid-3"></div>
+      <div className="play-grid-3"></div>
     </div>
   ) : (
     <div className="play-wrapper">
-      <div className="grid-2">
-        <p>{test}</p>
+    <div className="play-grid-1">
+      <p>No one is playing ...</p>
+    </div>
+      <div className="play-grid-2">
+        <form onSubmit={handleClick}>
+          <input
+            name="roomName"
+            type="text"
+            onChange={(event) => SetcreateRoom(event.target.value)}
+          />
+          <button>Create</button>
+        </form>
       </div>
-      <div className="grid-3"></div>
     </div>
   );
 }

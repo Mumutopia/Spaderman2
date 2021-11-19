@@ -5,3 +5,28 @@
 }
 
 
+@font-face {
+  font-family: "Cartoon";
+  src: url("./content/bm.ttf");
+}
+
+@import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
+
+
+h1 {
+  
+    font-size: 4em;
+    font-family: "Cartoon";
+    color: #c46330;
+  
+}
+
+h2 {
+  font-family: "Permanent Marker";
+    
+}
+
+h3 {
+  font-family: "Cartoon";
+  color: black;
+}

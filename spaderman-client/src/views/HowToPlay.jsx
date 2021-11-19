@@ -1,9 +1,11 @@
 import React from 'react'
+import HomeButton from '../components/HomeButton'
 
 export default function HowToPlay() {
     return (
         <div>
-            <p>ici</p>
+         <HomeButton/>
+            <p>You just have to dig bro !</p>
         </div>
     )
 }

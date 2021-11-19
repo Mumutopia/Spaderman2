@@ -1,10 +1,9 @@
 import React, { useState, useContext } from "react";
-
-import { Link,Navigate } from "react-router-dom";
+import "../styles/signin.css";
+import { Link, Navigate } from "react-router-dom";
 // custom tools
 import { useAuth } from "../auth/UserContext";
 import APIHandler from "../api/APIHandler";
-
 
 export default function Signin(props) {
   const [email, setEmail] = useState("admin@foobarbaz.io");
@@ -22,41 +21,40 @@ export default function Signin(props) {
   };
 
   return isLoggedIn ? (
-    <p> <p>{currentUser.username}</p></p>
-    
-
-
+    <Navigate to="/home" />
   ) : (
-    <form className="form" onSubmit={handleSubmit}>
-      <h1 className="title">Signin</h1>
-      <label className="label" htmlFor="email">
-        email
-      </label>
-     
-      <input
-        className="input"
-        id="email"
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <label className="label" htmlFor="password">
-        password
-      </label>
-      <input
-        className="input"
-        id="password"
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button className="btn">ok</button>
-      <p className="parag">
-        No account yet ? please{" "}
-        <Link to="/signup" className="link">
-          signup
-        </Link>
-      </p>
-    </form>
+    <div className="signin-wrapper">
+      <form className="form" onSubmit={handleSubmit}>
+        <h1 className="title">Signin</h1>
+        <label className="label" htmlFor="email">
+          email
+        </label>
+
+        <input
+          className="input"
+          id="email"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <label className="label" htmlFor="password">
+          password
+        </label>
+        <input
+          className="input"
+          id="password"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button className="btn">ok</button>
+        <p className="parag">
+          No account yet ? please{" "}
+          <Link to="/signup" className="link">
+            signup
+          </Link>
+        </p>
+      </form>
+    </div>
   );
 }

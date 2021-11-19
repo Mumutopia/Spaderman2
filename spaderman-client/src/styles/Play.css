@@ -1,3 +1,6 @@
+
+
+
 .play-wrapper {
   background-image: url("../img/desert-background.jpg");
   background-repeat: no-repeat;
@@ -17,16 +20,16 @@
   grid-column-start: 3;
 }
 
-.grid-1 {
+.play-grid-1 {
   grid-column-start: 3;
   grid-row-start: 2;
   
 }
-.grid-2 {
+.play-grid-2 {
   grid-column-start: 3;
   grid-row-start: 3;
 }
-.grid-3 {
+.play-grid-3 {
   grid-column-start: 3;
   grid-row-start: 4;
 }

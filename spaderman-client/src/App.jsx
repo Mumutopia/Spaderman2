@@ -15,6 +15,7 @@ import Signin from "./views/Signin";
 import Signup from "./views/Signup";
 import { UserContextProvider } from "./auth/UserContext";
 import { ProtectedRoute } from "./auth/ProtectedRoute";
+import HowToPlay from "./views/HowToPlay"
 // pages components
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
           <Route path="/signup" element={<Signup/>} />
           <Route path="/play" element={<Play />} />
           <Route path="/leaderBoard" element={<Leaderboard />} />
-          <Route path="/howtoplay" element={<Play />} />
+          <Route path="/howtoplay" element={<HowToPlay />} />
         </Routes>
     </UserContextProvider>
   );

@@ -93,6 +93,8 @@ export default function Game() {
   const [displayResult, setDisplayResult] = useState("hide-result");
   const [displayDugitems, setDisplayDugItem] = useState("item-dug");
   const [otherPlayerName, setOtherPlayerName] = useState("waiting for player...")
+  const [hitPlayerImage,setHitPlayerImage] = useState("/img/blue-shovel4.png")
+  const [hitOtherPlayerImage,setHitOtherPlayerImage] = useState("/img/red-shovel4.png")
 
   const myXPositionRef = useRef(myXPosition);
   const myYPositionRef = useRef(myYPosition);
@@ -106,6 +108,7 @@ export default function Game() {
 
   const { currentUser } = useAuth();
 
+  
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
   otherXPositionRef.current = otherXPosition;
@@ -119,6 +122,7 @@ export default function Game() {
   let cloneBoard;
 
   const leaveGame = async () => {
+    gameAudio.pause();
     try {
       socket.emit("closeRoom");
       await APIHandler.delete(`/play/rooms/${room}`);
@@ -129,6 +133,9 @@ export default function Game() {
 
   function startGame() {
     setIsBusy(false);
+    gameAudio.play();
+    socket.emit("newuser-refresh",params.id, currentUser?.username)
+    
     setHideStartButton("start-button-hidden");
     let gameTime = setInterval(() => {
       setGameTimer((time) => time - 1);
@@ -143,7 +150,7 @@ export default function Game() {
   }
 
   function sendSignal() {
-    console.log("sending");
+    
     socket.emit("sendStartSignal", room);
   }
 
@@ -154,7 +161,7 @@ export default function Game() {
         score: myScoreRef.current,
         otherScore: otherScoreRef.current,
       };
-      console.log(result);
+      
       await APIHandler.post("/games", result);
     } catch (err) {
       console.error(err);
@@ -213,7 +220,7 @@ export default function Game() {
   };
 
   function checkRadius(bomb, radius, xPos, yPos) {
-    console.log(xPos, yPos);
+    
 
     if (
       bomb[0] - radius <= xPos &&
@@ -228,7 +235,7 @@ export default function Game() {
 
   function plantedBomb() {
     const bombPlanted = [myXPosition, myYPosition];
-    console.log("bombavant", bombPlanted);
+    
     setTimeout(() => {
       if (
         checkRadius(
@@ -241,7 +248,9 @@ export default function Game() {
         gethitAudio[Math.floor(Math.random() * 9)].play();
         setMyScore((myScore) => myScore - 200);
         setIsStunned(true);
+        setHitPlayerImage("/img/blue-hit.png")
         setTimeout(() => {
+          setHitPlayerImage("/img/blue-shovel4.png")
           setIsStunned(false);
         }, 1800);
       }
@@ -255,8 +264,10 @@ export default function Game() {
         )
       ) {
         socket.emit("sendStunned", room, true);
+        setHitOtherPlayerImage("/img/red-hit.png")
         setTimeout(() => {
           socket.emit("sendStunned", room, false);
+          setHitOtherPlayerImage("/img/red-shovel4.png")
         }, 1800);
       }
     }, 2000);
@@ -271,7 +282,7 @@ export default function Game() {
     socket.emit("digBoard", room, boardGame);
     setTimeout(function () {
       cloneBoard[y][x] = bufferValue[0];
-      console.log(cloneBoard);
+      
       addRadiusX(x, y);
       addRadiusY(x, y);
       socket.emit("digBoard", room, boardGame);
@@ -370,7 +381,7 @@ export default function Game() {
     socket.emit("new-user", params.id, currentUser?.username);
 
     socket.on("trackMovement", (myXPosition, myYPosition, id) => {
-      console.log(myXPosition);
+      
       if (socket.id !== id) {
         setOtherXPosition(myXPosition);
         setOtherYPosition(myYPosition);
@@ -397,11 +408,12 @@ export default function Game() {
     });
 
     socket.on("startSignal", () => {
-      console.log("game on !");
+      
       startGame();
     });
 
     socket.on("incomingUser",username => {
+      console.log("receivedname")
       setOtherPlayerName(username)
     })
   }, []);
@@ -417,13 +429,13 @@ export default function Game() {
     myBomb,
     isBusy,
     gameTimer,
-    displayResult,
+    displayResult,otherPlayerName
   ]);
 
   useEffect(() => {
     handlingInput(event);
 
-    console.log(boardGame);
+    
   }, [event]);
 
   return (
@@ -453,9 +465,10 @@ export default function Game() {
         <GameDisplay
           myScore={myScore}
           myBomb={myBomb}
-          displayDugitems={displayDugitems}
+          displayDugitems={displayDugitems} hitPlayerImage={hitPlayerImage}
+
         />
-        <DisplayOtherPlayer otherScore={otherScore} otherBomb={otherBomb} />
+        <DisplayOtherPlayer otherScore={otherScore} otherBomb={otherBomb} hitOtherPlayerImage={hitOtherPlayerImage} />
 
         <GameBoard
           board={boardGame}

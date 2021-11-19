@@ -61,7 +61,8 @@ class Signup extends Component {
     //   <Redirect to="/dashboard" />
     <Navigate to="/home" />
     ) : (
-      <form
+      <div className="signin-wrapper" >
+        <form
         className="form"
         onSubmit={this.handleSubmit}
         onChange={this.handleChange}
@@ -106,6 +107,8 @@ class Signup extends Component {
           </Link>
         </p>
       </form>
+      </div>
+      
     );
   }
 }
