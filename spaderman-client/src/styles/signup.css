@@ -1,4 +1,4 @@
-.signin-wrapper {
+.signup-wrapper {
     background-image: url("../img/desert-background.jpg");
     background-repeat: no-repeat;
     background-size: cover;
@@ -9,7 +9,7 @@
   grid-template-rows: 1fr 2fr;
 }
 
-.signin-form {
+.signup-form {
     background-color:beige;
     border: 2px solid;
 height: fit-content;

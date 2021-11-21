@@ -24,27 +24,29 @@
     background-image: url("../img/hole2.png");
     background-size: 100%, 100%;
     background-repeat: no-repeat;
+    background-size: contain;
   }
 
 .myPlayer {
     background-image: url("../img/blue-shovel-mini2.png");
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 .otherPlayer {
     background-image: url("../img/red-shovel-mini2.png");
-    background-size: cover;
+    background-size:contain;
     background-repeat: no-repeat;
+    
 }
 
 .bombs {
     background-image: url("../img/bomb2.png");
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 .bomb-radius {
     background-image: url("../img/bomb-radius.png");
-    background-size: cover;
+    background-size: contain;
     background-repeat: no-repeat;
 }
 

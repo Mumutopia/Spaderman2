@@ -24,6 +24,7 @@ export default function Play() {
       console.error(err);
     }
     fetchRooms();
+    socket.emit("closeRoom");
   };
 
   const fetchRooms = async () => {
@@ -36,21 +37,17 @@ export default function Play() {
     }
   };
 
-   
   const increasePlayersInRoom = async (roomId) => {
     try {
-      console.log()
-      const data ={
-        _id:roomId,
-        numberOfPlayers :+1
-      }
+      console.log();
+      const data = {
+        _id: roomId,
+        numberOfPlayers: +1,
+      };
 
-      await APIHandler.patch("/play/rooms",data)
-      
-    } catch (error) {
-      
-    }
-  }
+      await APIHandler.patch("/play/rooms", data);
+    } catch (error) {}
+  };
 
   useEffect(() => {
     fetchRooms();
@@ -61,6 +58,7 @@ export default function Play() {
     socket.on("refreshRooms", () => {
       setRefreshRooms((refreshRooms) => refreshRooms + 1);
     });
+
     // socket.on("updateRoomsPlayer",(room) =>{
     //   increasePlayersInRoom(room)
     //   setRefreshRooms((refreshRooms) => refreshRooms + 1)
@@ -70,28 +68,34 @@ export default function Play() {
 
   return isNaN(rooms) ? (
     <div className="play-wrapper">
-      <HomeButton/>
-      <div className="play-grid-1"></div>
-      <div>
+      <header className="play-header-grid">
+        
+        <HomeButton />
+      </header>
+
+      <div className="playroom-grid">
         {rooms.map((room, i) => {
           return (
-            <div key={i}>
-             
-             <Link
-                to={{
-                  pathname: `/game/${room._id}`,
-                  state: room,
-                }}
-              >
-                Join {room.roomName}
-              </Link>
-              <p>Number of players : {room.numberOfPlayers}</p>
+            <div className="rooms-div" key={i}>
+              <button className="play-button-effect">
+                <Link
+                  className="play-link-style"
+                  to={{
+                    pathname: `/game/${room._id}`,
+                    state: room,
+                  }}
+                >
+                  <p>Join {room.roomName}</p>
+                  <br />
+                  <p>Players : {room.numberOfPlayers}/2</p>
+                </Link>{" "}
+              </button>
             </div>
           );
         })}
       </div>
 
-      <div className="play-grid-2">
+      <div className="create-room-grid">
         <form onSubmit={handleClick}>
           <input
             name="roomName"
@@ -105,10 +109,14 @@ export default function Play() {
     </div>
   ) : (
     <div className="play-wrapper">
-    <div className="play-grid-1">
-      <p>No one is playing ...</p>
-    </div>
-      <div className="play-grid-2">
+    <header className="play-header-grid">
+        
+        <HomeButton />
+      </header>
+      <div className="playroom-grid">
+        <p>No one is playing ...</p>
+      </div>
+      <div className="create-room-grid">
         <form onSubmit={handleClick}>
           <input
             name="roomName"

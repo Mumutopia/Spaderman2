@@ -5,12 +5,12 @@ export default function DisplayOtherPlayer({ otherScore, otherBomb,hitOtherPlaye
     <div id="otherPlayer-wrapper">
       <div className="players-info">
         <div className="score-info">
-          <h3>Score : {otherScore}</h3>
+          <h3 className="red-score">Score : {otherScore}</h3>
           <img className="ruby-image" src="/img/R2.png" alt="ruby" />
         </div>
-        <div className="bomb-info">
+        <div className="bomb-info ">
           <img className="bomb-image" src="/img/bomb2.png" alt="abomb" />
-          <p>: {otherBomb} </p>
+          <p >: {otherBomb} </p>
         </div>
       </div>
 

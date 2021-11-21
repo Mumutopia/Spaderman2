@@ -5,12 +5,12 @@ export default function GameDisplay({ myScore, myBomb,displayDugitems,hitPlayerI
     <div id="myplayer-wrapper">
       <div className="players-info">
         <div className="score-info">
-          <h3>Score :{myScore}</h3>
+          <h3 className="blue-score">Score :{myScore}</h3>
           <img className="ruby-image" src="/img/R2.png" alt="ruby" />
         </div>
         <div className="bomb-info">
           <img className="bomb-image" src="/img/bomb2.png" alt="abomb" />
-          <p> : {myBomb} </p>
+          <p > : {myBomb} </p>
         </div>
       </div>
     <div className="avatar-item-wrapper">

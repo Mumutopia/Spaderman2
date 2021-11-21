@@ -5,10 +5,26 @@
     height: 100vh;
     width: 100vw;
   display: grid; 
-  grid-template-columns: 2fr 3fr 2fr;
-  grid-template-rows: 2fr 3fr 2fr;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: 1fr 2fr;
+  justify-content: center;
+  align-items: center;
   }
   
+.index-title{
+  text-decoration: none;
+  font-size: 4em;
+  font-family: "Cartoon";
+  color: #c46330;
+}
+
+.index-titles{
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+}
+
   .index-header{
     grid-column-start: 1;
     grid-column-end: -1;
@@ -36,6 +52,7 @@
     grid-column-end: 2;
     grid-row-start: 2;
     grid-row-end: 3;
+   justify-self: center;
     
   }
 
@@ -44,12 +61,18 @@
     grid-column-end: 4;
     grid-row-start: 2;
     grid-row-end: 3;
+    justify-self: center;
 
   }
-  .index-grid {
+  .index-grid2 {
     grid-column-start: 2;
     grid-column-end: 3;
     grid-row-start: 2;
     grid-row-end: 3;
 
+  }
+
+  .signin-signup{
+    display: flex;
+    justify-content: space-evenly;
   }

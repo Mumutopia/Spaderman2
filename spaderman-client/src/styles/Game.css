@@ -21,6 +21,7 @@
   height: 80%;
 }
 
+
 .gameboard-header{
   grid-column-start: 1;
   grid-column-end: -1;
@@ -37,11 +38,14 @@
 .main-board-title {
   grid-column-start: 2;
   grid-column-end: 3;
+  font-size: 4em;
+    font-family: "Cartoon";
+    color: #c46330;
  
 }
 
 .player1-name {
-  
+  color: #0a76a7;
   grid-column-start: 1;
   grid-column-end: 2;
   grid-row-start: 1;
@@ -49,16 +53,29 @@
   justify-content: flex-start;
 }
 
+.blue-score{
+  color: #0a76a7;
+}
+
 .player2-name{
+  color:#e31e25;
   grid-column-start: 3;
   grid-column-end: 4
   ;
   grid-row-start: 1;
   grid-row-end: 2;
 }
+.red-score{
+  color: #e31e25;
+}
+
 
 
 .header-buttons{
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+  width: 20%;
   
 }
 
@@ -94,6 +111,15 @@
   ;
 }
 
+.display-controls{
+  grid-column-start: 2;
+  grid-row-start: 3;
+  font-family: "Permanent Marker";
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 40%;
+}
 
 
 
@@ -122,6 +148,7 @@
 }
 
 .score-info {
+  font-family: "Permanent Marker";
   display: flex;
   align-items: center;
   justify-content: center;
@@ -132,9 +159,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  font-family: "Permanent Marker";
 }
 
+.time-left{
+  font-family: "Permanent Marker";
+}
 
 .avatar-item-wrapper{
   display: flex;

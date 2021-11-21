@@ -45,7 +45,7 @@ export default function GameBoard({
 
   return (
     <div id="boardGame-wrapper">
-    <h3>Time left : {gameTimer}</h3>
+    <h3 className="time-left">Time left : {gameTimer}</h3>
       <div id="board-wrapper">
         {board.map((x, i) =>
           x.map((y, j) => (

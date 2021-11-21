@@ -4,10 +4,10 @@ import { Link } from 'react-router-dom'
 export default function HomeButton() {
     return (
 
-        <Link  to={{
+        <Link className="spaderman-title" to={{
                 pathname : `/home`,
                 
-            }}>Home</Link>
+            }}>Spaderman</Link>
 
     )
 }

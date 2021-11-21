@@ -13,13 +13,15 @@
 @import url("https://fonts.googleapis.com/css2?family=Permanent+Marker&display=swap");
 
 
-h1 {
-  
+.spaderman-title {
+    text-decoration: none;
     font-size: 4em;
     font-family: "Cartoon";
     color: #c46330;
   
 }
+
+
 
 h2 {
   font-family: "Permanent Marker";
@@ -27,6 +29,9 @@ h2 {
 }
 
 h3 {
-  font-family: "Cartoon";
-  color: black;
+  
+}
+
+.logout-button {
+  background-color: beige;
 }

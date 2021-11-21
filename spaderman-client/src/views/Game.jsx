@@ -18,15 +18,12 @@ let bombAudio = [
   new Audio("/sounds/bomb3.mp3"),
   new Audio("/sounds/bomb4.mp3"),
   new Audio("/sounds/bomb5.mp3"),
-  new Audio("/sounds/bomb6.mp3"),
   new Audio("/sounds/bomb7.mp3"),
 ];
 
 let digAudio = [
   new Audio("/sounds/digging.mp3"),
   new Audio("/sounds/digging2.mp3"),
-  new Audio("/sounds/digging3.mp3"),
-  new Audio("/sounds/digging4.mp3"),
 ];
 
 let gameAudio = new Audio("/sounds/game-music2.mp3");
@@ -37,43 +34,24 @@ let getItemAudio = [
   new Audio("/sounds/get-item.mp3"),
   new Audio("/sounds/get-item2.mp3"),
   new Audio("/sounds/get-item3.mp3"),
-  new Audio("/sounds/get-item4.mp3"),
   new Audio("/sounds/get-item5.mp3"),
   new Audio("/sounds/get-item6.mp3"),
 ];
 
 let gethitAudio = [
   new Audio("/sounds/hit.mp3"),
-  new Audio("/sounds/hit2.mp3"),
-  new Audio("/sounds/hit3.mp3"),
+
   new Audio("/sounds/hit4.mp3"),
   new Audio("/sounds/hit5.mp3"),
-  new Audio("/sounds/hit6.mp3"),
-  new Audio("/sounds/hit7.mp3"),
+
   new Audio("/sounds/hit8.mp3"),
-  new Audio("/sounds/hit6.mp3"),
-]
+];
 
 function randomItemsSound() {
-  
   setTimeout(() => {
-    getItemAudio[Math.floor(Math.random() * 6)].play();
+    getItemAudio[Math.floor(Math.random() * 5)].play();
   }, 1000);
 }
-
-/*
-const [players, setWhoIsWho] = useState({
-    p1: null,
-    p2: null,
-  })
-const players =  {
-  p1: null,
-  p2: null,
-};
-
-const currentPlayerToSet = Object.entries(players).find(p => p === null);
-currentPlayerToSet = "socket-id"
-*/
 
 export default function Game() {
   const [myXPosition, setMyxPosition] = useState(5);
@@ -88,13 +66,17 @@ export default function Game() {
   const [otherBomb, setOtherBomb] = useState(30);
   const [isBusy, setIsBusy] = useState(true);
   const [isStunned, setIsStunned] = useState(false);
-  const [gameTimer, setGameTimer] = useState(30);
+  const [gameTimer, setGameTimer] = useState(82);
   const [hideStartButton, setHideStartButton] = useState();
   const [displayResult, setDisplayResult] = useState("hide-result");
   const [displayDugitems, setDisplayDugItem] = useState("item-dug");
-  const [otherPlayerName, setOtherPlayerName] = useState("waiting for player...")
-  const [hitPlayerImage,setHitPlayerImage] = useState("/img/blue-shovel4.png")
-  const [hitOtherPlayerImage,setHitOtherPlayerImage] = useState("/img/red-shovel4.png")
+  const [otherPlayerName, setOtherPlayerName] = useState(
+    "waiting for player..."
+  );
+  const [hitPlayerImage, setHitPlayerImage] = useState("/img/blue-shovel4.png");
+  const [hitOtherPlayerImage, setHitOtherPlayerImage] = useState(
+    "/img/red-shovel4.png"
+  );
 
   const myXPositionRef = useRef(myXPosition);
   const myYPositionRef = useRef(myYPosition);
@@ -108,7 +90,6 @@ export default function Game() {
 
   const { currentUser } = useAuth();
 
-  
   myXPositionRef.current = myXPosition;
   myYPositionRef.current = myYPosition;
   otherXPositionRef.current = otherXPosition;
@@ -134,8 +115,8 @@ export default function Game() {
   function startGame() {
     setIsBusy(false);
     gameAudio.play();
-    socket.emit("newuser-refresh",params.id, currentUser?.username)
-    
+    socket.emit("newuser-refresh", params.id, currentUser?.username);
+
     setHideStartButton("start-button-hidden");
     let gameTime = setInterval(() => {
       setGameTimer((time) => time - 1);
@@ -150,7 +131,6 @@ export default function Game() {
   }
 
   function sendSignal() {
-    
     socket.emit("sendStartSignal", room);
   }
 
@@ -161,7 +141,7 @@ export default function Game() {
         score: myScoreRef.current,
         otherScore: otherScoreRef.current,
       };
-      
+
       await APIHandler.post("/games", result);
     } catch (err) {
       console.error(err);
@@ -198,7 +178,7 @@ export default function Game() {
           break;
         case "l":
           dig(myXPosition, myYPosition);
-          digAudio[Math.floor(Math.random() * 4)].play();
+          digAudio[Math.floor(Math.random() * 2)].play();
           setIsBusy(true);
           setTimeout(() => {
             setIsBusy(false);
@@ -220,8 +200,6 @@ export default function Game() {
   };
 
   function checkRadius(bomb, radius, xPos, yPos) {
-    
-
     if (
       bomb[0] - radius <= xPos &&
       bomb[0] + radius >= xPos &&
@@ -235,7 +213,7 @@ export default function Game() {
 
   function plantedBomb() {
     const bombPlanted = [myXPosition, myYPosition];
-    
+
     setTimeout(() => {
       if (
         checkRadius(
@@ -245,12 +223,12 @@ export default function Game() {
           myYPositionRef.current
         )
       ) {
-        gethitAudio[Math.floor(Math.random() * 9)].play();
+        gethitAudio[Math.floor(Math.random() * 4)].play();
         setMyScore((myScore) => myScore - 200);
         setIsStunned(true);
-        setHitPlayerImage("/img/blue-hit.png")
+        setHitPlayerImage("/img/blue-hit.png");
         setTimeout(() => {
-          setHitPlayerImage("/img/blue-shovel4.png")
+          setHitPlayerImage("/img/blue-shovel4.png");
           setIsStunned(false);
         }, 1800);
       }
@@ -264,10 +242,10 @@ export default function Game() {
         )
       ) {
         socket.emit("sendStunned", room, true);
-        setHitOtherPlayerImage("/img/red-hit.png")
+        setHitOtherPlayerImage("/img/red-hit.png");
         setTimeout(() => {
           socket.emit("sendStunned", room, false);
-          setHitOtherPlayerImage("/img/red-shovel4.png")
+          setHitOtherPlayerImage("/img/red-shovel4.png");
         }, 1800);
       }
     }, 2000);
@@ -282,11 +260,11 @@ export default function Game() {
     socket.emit("digBoard", room, boardGame);
     setTimeout(function () {
       cloneBoard[y][x] = bufferValue[0];
-      
+
       addRadiusX(x, y);
       addRadiusY(x, y);
       socket.emit("digBoard", room, boardGame);
-      bombAudio[Math.floor(Math.random() * 7)].play();
+      bombAudio[Math.floor(Math.random() * 6)].play();
       setTimeout(() => {
         removeRadiusX(x, y);
         removeRadiusY(x, y);
@@ -381,7 +359,6 @@ export default function Game() {
     socket.emit("new-user", params.id, currentUser?.username);
 
     socket.on("trackMovement", (myXPosition, myYPosition, id) => {
-      
       if (socket.id !== id) {
         setOtherXPosition(myXPosition);
         setOtherYPosition(myYPosition);
@@ -408,14 +385,13 @@ export default function Game() {
     });
 
     socket.on("startSignal", () => {
-      
       startGame();
     });
 
-    socket.on("incomingUser",username => {
-      console.log("receivedname")
-      setOtherPlayerName(username)
-    })
+    socket.on("incomingUser", (username) => {
+      console.log("receivedname");
+      setOtherPlayerName(username);
+    });
   }, []);
 
   useEffect(() => {
@@ -429,13 +405,12 @@ export default function Game() {
     myBomb,
     isBusy,
     gameTimer,
-    displayResult,otherPlayerName
+    displayResult,
+    otherPlayerName,
   ]);
 
   useEffect(() => {
     handlingInput(event);
-
-    
   }, [event]);
 
   return (
@@ -465,10 +440,14 @@ export default function Game() {
         <GameDisplay
           myScore={myScore}
           myBomb={myBomb}
-          displayDugitems={displayDugitems} hitPlayerImage={hitPlayerImage}
-
+          displayDugitems={displayDugitems}
+          hitPlayerImage={hitPlayerImage}
         />
-        <DisplayOtherPlayer otherScore={otherScore} otherBomb={otherBomb} hitOtherPlayerImage={hitOtherPlayerImage} />
+        <DisplayOtherPlayer
+          otherScore={otherScore}
+          otherBomb={otherBomb}
+          hitOtherPlayerImage={hitOtherPlayerImage}
+        />
 
         <GameBoard
           board={boardGame}
@@ -478,6 +457,20 @@ export default function Game() {
           otherXPosition={otherXPosition}
           gameTimer={gameTimer}
         />
+        <div className="display-controls">
+          <h3>Controls :</h3>
+          <div>
+            <p>
+              <b>Move :</b> Arrows
+            </p>
+            <p>
+              <b>Dig :</b> L
+            </p>
+            <p>
+              <b>Bomb :</b> J
+            </p>
+          </div>
+        </div>
       </div>
     </>
   );
